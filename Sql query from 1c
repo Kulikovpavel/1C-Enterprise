@@ -10,10 +10,10 @@
 				|                  CASE WHEN PDIIncome.Date_input IS NULL THEN InOut.DocOUT_ID ELSE PDIIncome.DocOUT_ID END AS DocOUT_ID, 
 				|                  InOut.DocIN_ID, InOut.Date_input, InOut.VIN, InOut.Date_Man, InOut.Model_car, InOut.Firm_name, InOut.NumR, InOut.DateR, InOut.Dealer, InOut.Number_cell, InOut.Agreement
 				|           FROM v1CSstoreInOot AS InOut 
-        |                LEFT JOIN v1CSstoreInOot AS PDIIncome 
-        |                ON (PDIIncome.VIN = InOut.VIN AND PDIIncome.ExternalWorksReturn = 1 AND PDIIncome.ExternalWorks = 0 AND
-        |                    PDIIncome.Date_Input IN (SELECT MIN(Date_Input) FROM v1CSstoreInOot WHERE Date_input > InOut.Date_Output AND VIN = InOut.VIN AND PDIIncome.ExternalWorksReturn = 1 AND PDIIncome.ExternalWorks = 0))
-        |           WHERE InOut.ExternalWorksReturn = 0
+        			|                LEFT JOIN v1CSstoreInOot AS PDIIncome 
+        			|                ON (PDIIncome.VIN = InOut.VIN AND PDIIncome.ExternalWorksReturn = 1 AND PDIIncome.ExternalWorks = 0 AND
+        			|                    PDIIncome.Date_Input IN (SELECT MIN(Date_Input) FROM v1CSstoreInOot WHERE Date_input > InOut.Date_Output AND VIN = InOut.VIN AND PDIIncome.ExternalWorksReturn = 1 AND PDIIncome.ExternalWorks = 0))
+        			|           WHERE InOut.ExternalWorksReturn = 0
 				|       ) as main 
 				| where Date_input <'%2' and (Date_output IS NULL	or Date_output>='%1')  ORDER BY Date_input";
 СтрокаЗапроса1 = СтрЗаменить(СтрокаЗапроса1,"%1", МинимальнаяДатаВыезда);
