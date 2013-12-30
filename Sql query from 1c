@@ -2,10 +2,10 @@
 МаксимальнаяДатаВыезда = Формат( КонПериода+24*60*60,"ДФ=yyyyMMdd")+" 23:59:59.999";
 // maxDate_input, maxDate_output - сдвиг дат в большую сторону из-за перехода часов в ночь.
 // внутренний запрос учитывает выезд на PDI, который мы не должны видеть и берет, в случае такого случая дату выезда и документ выезда итоговые
-СтрокаЗапроса1 = "Select *,
+СтрокаЗапроса1 = "SELECT *,
 		| 	maxDate_input = (select max(Date_input) from v1CSstoreInOot where DocIN_ID = main.DocIN_ID and NOT DocIN_ID IS NULL ),
 		| 	maxDate_output = (select max(Date_output) from v1CSstoreInOot where DocOUT_ID = main.DocOUT_ID and NOT DocOUT_ID IS NULL)
-		| from (
+		| FROM (
 		|           SELECT CASE WHEN PDIIncome.Date_input IS NULL THEN InOut.Date_output ELSE PDIIncome.Date_output END AS Date_Output,
 		|                  CASE WHEN PDIIncome.Date_input IS NULL THEN InOut.DocOUT_ID ELSE PDIIncome.DocOUT_ID END AS DocOUT_ID, 
 		|                  InOut.DocIN_ID, InOut.Date_input, InOut.VIN, InOut.Date_Man, InOut.Model_car, InOut.Firm_name, InOut.NumR, InOut.DateR, InOut.Dealer, InOut.Number_cell, InOut.Agreement
@@ -14,7 +14,7 @@
         	|                ON (PDIIncome.VIN = InOut.VIN AND PDIIncome.ExternalWorksReturn = 1 AND PDIIncome.ExternalWorks = 0 AND
         	|                    PDIIncome.Date_Input IN (SELECT MIN(Date_Input) FROM v1CSstoreInOot WHERE Date_input > InOut.Date_Output AND VIN = InOut.VIN AND PDIIncome.ExternalWorksReturn = 1 AND PDIIncome.ExternalWorks = 0))
         	|           WHERE InOut.ExternalWorksReturn = 0
-		|       ) as main 
-		| where Date_input <'%2' and (Date_output IS NULL	or Date_output>='%1')  ORDER BY Date_input";
+		|       ) AS main 
+		| WHERE Date_input <'%2' and (Date_output IS NULL	or Date_output>='%1')  ORDER BY Date_input";
 СтрокаЗапроса1 = СтрЗаменить(СтрокаЗапроса1,"%1", МинимальнаяДатаВыезда);
 СтрокаЗапроса1 = СтрЗаменить(СтрокаЗапроса1,"%2", МаксимальнаяДатаВыезда);
